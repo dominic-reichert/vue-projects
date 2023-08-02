@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To-Do App</title>
+</head>
+
+<body id="app">
+    <header>
+        <h1 class="title">To-Do App</h1>
+    </header>
+    <main>
+        <form>
+            <div class="input-container">
+                <input type="text" name="newTodo" id="newTodo" placeholder="Get sh*t done!" v-model.lazy="newTodo">
+                <button class="add-button" type="submit" @click="addTodo">Add</button>
+            </div>
+        </form>
+
+        <section class="filter-and-options">
+            <h2>Filter & Options</h2>
+            <div class="filter-container">
+                <input type="radio" class="radio-button" name="filter-radio" id="all" value="all" v-model="filter">
+                <label for="all">All</label>
+                <input type="radio" class="radio-button" name="filter-radio" id="open" value="open"
+                    v-model="filter"><label for="open">Open</label>
+                <input type="radio" class="radio-button" name="filter-radio" id="done" value="done"
+                    v-model="filter"><label for="done">Done</label>
+            </div>
+
+            <button class="delete-button" @click="removeDoneTodos">Remove finished To-Dos</button>
+        </section>
+
+        <section class="todos">
+            <h2>Your To-Dos</h2>
+            <ul id="list">
+                <li v-for="todo in filteredTodos" :key="todo.id" :class="{'done': todo.done}">
+                    <input type="checkbox" v-model="todo.done" :checked="todo.done" :id="'todo-'+todo.id"
+                        @change.prevent="updateTodo(todo)"></input>
+                    <label :for="'todo-'+todo.id">{{todo.description}}</label>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

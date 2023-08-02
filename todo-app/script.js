@@ -38,5 +38,4 @@ Vue.createApp({
       this.todos = this.todos.filter((todo) => todo.done === false);
     },
   },
-  mounted() {},
 }).mount("#app");
