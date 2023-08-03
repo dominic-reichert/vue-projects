@@ -6,6 +6,9 @@ Vue.createApp({
       filter: "all",
     };
   },
+  created() {
+    this.loadTodos();
+  },
   computed: {
     filteredTodos() {
       return this.todos.filter((todo) => {
@@ -25,12 +28,18 @@ Vue.createApp({
     loadTodos() {
       fetch("http://localhost:4730/todos")
         .then((response) => response.json())
-        .then((todoData) => (this.todos = todoData));
+        .then((todoData) => {
+          this.todos = todoData;
+        });
     },
 
     addTodo() {
       if (this.newTodo.length === 0) {
         return;
+      }
+
+      if (this.checkForDuplicate()) {
+        return alert("Duplicate todo");
       }
 
       const newTodo = {
@@ -44,7 +53,7 @@ Vue.createApp({
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newTodo),
-      });
+      }).then(this.loadTodos());
 
       this.newTodo = "";
     },
@@ -52,9 +61,8 @@ Vue.createApp({
     removeDoneTodos() {
       const urls = [];
       for (let todo of this.todos) {
-        id = todo.id;
         if (todo.done === true) {
-          urls.push(`http://localhost:4730/todos/${id}`);
+          urls.push(`http://localhost:4730/todos/${todo.id}`);
         }
       }
 
@@ -81,8 +89,15 @@ Vue.createApp({
         body: JSON.stringify(updatedTodo),
       }).then((response) => console.log(response.status));
     },
-  },
-  created() {
-    this.loadTodos();
+
+    checkForDuplicate() {
+      for (let i = 0; i < this.todos.length; i++) {
+        const todo = this.todos[i];
+        if (todo.description.toLowerCase() === this.newTodo.toLowerCase()) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
 }).mount("#app");

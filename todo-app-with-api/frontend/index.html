@@ -15,8 +15,8 @@
     <main>
         <form>
             <div class="input-container">
-                <input type="text" name="newTodo" id="newTodo" placeholder="Get sh*t done!" v-model.lazy="newTodo">
-                <button class="add-button" type="submit" @click="addTodo">Add</button>
+                <input type="text" name="newTodo" id="newTodo" placeholder="Get sh*t done!" v-model="newTodo">
+                <button class="add-button" type="submit" @click.prevent="addTodo()">Add</button>
             </div>
         </form>
 
@@ -31,15 +31,14 @@
                     v-model="filter"><label for="done">Done</label>
             </div>
 
-            <button class="delete-button" @click="removeDoneTodos">Remove finished To-Dos</button>
+            <button class="delete-button" @click="removeDoneTodos()">Remove finished To-Dos</button>
         </section>
 
         <section class="todos">
             <h2>Your To-Dos</h2>
             <ul id="list">
                 <li v-for="todo in filteredTodos" :key="todo.id" :class="{'done': todo.done}">
-                    <input type="checkbox" v-model="todo.done" :checked="todo.done" :id="'todo-'+todo.id"
-                        @change.prevent="updateTodo(todo)"></input>
+                    <input type="checkbox" v-model="todo.done" :id="'todo-'+todo.id" @change="updateTodo(todo)"></input>
                     <label :for="'todo-'+todo.id">{{todo.description}}</label>
                 </li>
             </ul>
